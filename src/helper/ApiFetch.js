@@ -4,6 +4,7 @@ const apiFetch = async () => {
   results.forEach((i) => {
     delete i.residents;
   });
+  console.log(results);
   return results;
 };
 
