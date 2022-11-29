@@ -10,9 +10,7 @@ export default function Table() {
           <TableHeaders />
         </tr>
       </thead>
-      <tbody>
-        <TableInfo />
-      </tbody>
+      <TableInfo />
     </table>
   );
 }
