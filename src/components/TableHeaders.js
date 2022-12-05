@@ -5,7 +5,7 @@ export default function TableHeaders() {
     <>
       <th>Name</th>
       <th>Rotation Period</th>
-      <th>Orbital Period</th>
+      <th>orbital period</th>
       <th>Diameter</th>
       <th>Climate</th>
       <th>Gravity</th>
