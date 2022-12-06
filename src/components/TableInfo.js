@@ -3,6 +3,7 @@ import ApiContext from '../context/ApiContext';
 
 // Trocar nome de filtros das linhas 53 a 57
 // limpar os inputs após clicar no botão de filtro
+// Terminar de implementar a lógica do sort, que é chamado pelo data da context e sempre sobrescreve o que foi filtrado
 
 export default function TableInfo() {
   const [textFilter, setTextFilter] = useState('');
@@ -24,28 +25,9 @@ export default function TableInfo() {
   });
   const [appliedFilters, setAppliedFilters] = useState([]);
   const { data } = useContext(ApiContext);
-  const [test, setTest] = useState([data]);
 
   const filteringRepeatedFilters = (option) => (
     !appliedFilters.find((e) => option === e.columnFilter));
-
-  const sortFilter = () => {
-    const validPlanets = data.filter((e) => (
-      e[filterOrder.column] !== 'unknown'));
-
-    const unknownPlanets = data.filter((e) => (
-      e[filterOrder.column] === 'unknown'
-    ));
-
-    if (filterOrder.sort === 'ASC') {
-      validPlanets.sort((a, b) => (
-        Number(a[filterOrder.column]) - Number(b[filterOrder.column])));
-    } else if (filterOrder.sort === 'DESC') {
-      validPlanets.sort((a, b) => (
-        Number(b[filterOrder.column]) - Number(a[filterOrder.column])));
-    }
-    return setTest([...validPlanets, ...unknownPlanets]);
-  };
 
   const userFilter = () => {
     const masterFilter = data.filter((e) => (
@@ -68,10 +50,37 @@ export default function TableInfo() {
       });
       return selectFilters.every((element) => element);
     });
-    console.log(result);
     return result;
   };
-console.log(userFilter());
+
+  const removeFilter = ({ target: { value } }) => {
+    const filtering = appliedFilters.filter((e) => e.columnFilter !== value);
+    setAppliedFilters(filtering);
+  };
+
+  const removeAllFilters = () => {
+    setAppliedFilters([]);
+  };
+
+  const sortFilter = () => {
+    const validPlanets = userFilter().filter((e) => (
+      e[filterOrder.column] !== 'unknown'));
+
+    const unknownPlanets = userFilter().filter((e) => (
+      e[filterOrder.column] === 'unknown'
+    ));
+
+    if (filterOrder.sort === 'ASC') {
+      validPlanets.sort((a, b) => (
+        Number(a[filterOrder.column]) - Number(b[filterOrder.column])));
+    } else if (filterOrder.sort === 'DESC') {
+      validPlanets.sort((a, b) => (
+        Number(b[filterOrder.column]) - Number(a[filterOrder.column])));
+    }
+    const test = ([...validPlanets, ...unknownPlanets]);
+    return test;
+  };
+
   return (
     <>
       Busca
@@ -120,10 +129,27 @@ console.log(userFilter());
       </button>
       {appliedFilters
         .map(({ columnFilter, comparisonFilter, valueFilter }, index) => (
-          <div key={ index }>
-            { `${columnFilter} ${comparisonFilter} ${valueFilter}` }
+          <div key={ index } data-testid="filter">
+            <span>
+              { `${columnFilter} ${comparisonFilter} ${valueFilter}` }
+            </span>
+            <button
+              type="button"
+              value={ columnFilter }
+              name={ columnFilter }
+              onClick={ removeFilter }
+            >
+              X
+            </button>
           </div>
         ))}
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ removeAllFilters }
+      >
+        Remover todas filtragens
+      </button>
       <label
         htmlFor="column"
       >
@@ -186,7 +212,12 @@ console.log(userFilter());
         {userFilter()
           .map((e, i) => (
             <tr key={ i }>
-              <td key={ e.name }>{e.name}</td>
+              <td
+                data-testid="planet-name"
+                key={ e.name }
+              >
+                {e.name}
+              </td>
               <td key={ e.rotation_period }>{e.rotation_period}</td>
               <td key={ e.orbital_period }>{e.orbital_period}</td>
               <td key={ e.diameter }>{e.diameter}</td>
