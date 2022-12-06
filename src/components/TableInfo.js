@@ -2,9 +2,14 @@ import React, { useContext, useState } from 'react';
 import ApiContext from '../context/ApiContext';
 
 // Trocar nome de filtros das linhas 53 a 57
+// limpar os inputs após clicar no botão de filtro
 
 export default function TableInfo() {
   const [textFilter, setTextFilter] = useState('');
+  const [filterOrder, setFilterOrder] = useState({
+    column: 'population',
+    sort: 'ASC',
+  });
   const [columnOptions] = useState([
     'population',
     'orbital_period',
@@ -19,9 +24,28 @@ export default function TableInfo() {
   });
   const [appliedFilters, setAppliedFilters] = useState([]);
   const { data } = useContext(ApiContext);
+  const [test, setTest] = useState([data]);
 
   const filteringRepeatedFilters = (option) => (
     !appliedFilters.find((e) => option === e.columnFilter));
+
+  const sortFilter = () => {
+    const validPlanets = data.filter((e) => (
+      e[filterOrder.column] !== 'unknown'));
+
+    const unknownPlanets = data.filter((e) => (
+      e[filterOrder.column] === 'unknown'
+    ));
+
+    if (filterOrder.sort === 'ASC') {
+      validPlanets.sort((a, b) => (
+        Number(a[filterOrder.column]) - Number(b[filterOrder.column])));
+    } else if (filterOrder.sort === 'DESC') {
+      validPlanets.sort((a, b) => (
+        Number(b[filterOrder.column]) - Number(a[filterOrder.column])));
+    }
+    return setTest([...validPlanets, ...unknownPlanets]);
+  };
 
   const userFilter = () => {
     const masterFilter = data.filter((e) => (
@@ -44,9 +68,10 @@ export default function TableInfo() {
       });
       return selectFilters.every((element) => element);
     });
+    console.log(result);
     return result;
   };
-
+console.log(userFilter());
   return (
     <>
       Busca
@@ -99,6 +124,64 @@ export default function TableInfo() {
             { `${columnFilter} ${comparisonFilter} ${valueFilter}` }
           </div>
         ))}
+      <label
+        htmlFor="column"
+      >
+        <select
+          data-testid="column-sort"
+          name="column"
+          onChange={ ({ target: { value } }) => {
+            setFilterOrder({ ...filterOrder, column: value });
+          } }
+        >
+          {columnOptions
+            .map((e, i) => (
+              <option
+                key={ i }
+                value={ e }
+              >
+                {e}
+              </option>))}
+        </select>
+      </label>
+
+      <label
+        htmlFor="sort"
+      >
+        <input
+          type="radio"
+          value="ASC"
+          name="sort"
+          data-testid="column-sort-input-asc"
+          onChange={ ({ target: { value } }) => {
+            setFilterOrder({ ...filterOrder, sort: value });
+          } }
+        />
+        Crescente
+      </label>
+      <label
+        htmlFor="sort"
+      >
+        <input
+          data-testid="column-sort-input-desc"
+          type="radio"
+          value="DESC"
+          name="sort"
+          onChange={ ({ target: { value } }) => {
+            setFilterOrder({ ...filterOrder, sort: value });
+          } }
+        />
+        Decrescente
+      </label>
+
+      <button
+        type="button"
+        onClick={ sortFilter }
+        data-testid="column-sort-button"
+      >
+        Ordenar
+      </button>
+
       <tbody>
         {userFilter()
           .map((e, i) => (
