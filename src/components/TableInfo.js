@@ -5,13 +5,23 @@ import ApiContext from '../context/ApiContext';
 
 export default function TableInfo() {
   const [textFilter, setTextFilter] = useState('');
+  const [columnOptions] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
   const [filtersSelected, setFilterSelected] = useState({
-    columnFilter: 'population',
+    columnFilter: columnOptions[0],
     comparisonFilter: 'maior que',
     valueFilter: 0,
   });
   const [appliedFilters, setAppliedFilters] = useState([]);
   const { data } = useContext(ApiContext);
+
+  const filteringRepeatedFilters = (option) => (
+    !appliedFilters.find((e) => option === e.columnFilter));
 
   const userFilter = () => {
     const masterFilter = data.filter((e) => (
@@ -52,11 +62,9 @@ export default function TableInfo() {
         } }
         data-testid="column-filter"
       >
-        <option value="population">population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
+        {columnOptions
+          .filter(filteringRepeatedFilters)
+          .map((e, i) => <option key={ i } value={ e }>{e}</option>)}
       </select>
       Comparison:
       <select
@@ -85,6 +93,12 @@ export default function TableInfo() {
       >
         Aplicar
       </button>
+      {appliedFilters
+        .map(({ columnFilter, comparisonFilter, valueFilter }, index) => (
+          <div key={ index }>
+            { `${columnFilter} ${comparisonFilter} ${valueFilter}` }
+          </div>
+        ))}
       <tbody>
         {userFilter()
           .map((e, i) => (
