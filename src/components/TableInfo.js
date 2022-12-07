@@ -62,7 +62,7 @@ export default function TableInfo() {
     setAppliedFilters([]);
   };
 
-  const sortFilter = () => {
+  /* const sortFilter = () => {
     const validPlanets = userFilter().filter((e) => (
       e[filterOrder.column] !== 'unknown'));
 
@@ -79,7 +79,7 @@ export default function TableInfo() {
     }
     const test = ([...validPlanets, ...unknownPlanets]);
     return test;
-  };
+  }; */
 
   return (
     <>
@@ -202,7 +202,7 @@ export default function TableInfo() {
 
       <button
         type="button"
-        onClick={ sortFilter }
+        /* onClick={ sortFilter } */
         data-testid="column-sort-button"
       >
         Ordenar
