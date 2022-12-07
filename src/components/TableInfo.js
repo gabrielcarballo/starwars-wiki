@@ -7,10 +7,6 @@ import ApiContext from '../context/ApiContext';
 
 export default function TableInfo() {
   const [textFilter, setTextFilter] = useState('');
-  const [filterOrder, setFilterOrder] = useState({
-    column: 'population',
-    sort: 'ASC',
-  });
   const [columnOptions] = useState([
     'population',
     'orbital_period',
@@ -149,63 +145,6 @@ export default function TableInfo() {
         onClick={ removeAllFilters }
       >
         Remover todas filtragens
-      </button>
-      <label
-        htmlFor="column"
-      >
-        <select
-          data-testid="column-sort"
-          name="column"
-          onChange={ ({ target: { value } }) => {
-            setFilterOrder({ ...filterOrder, column: value });
-          } }
-        >
-          {columnOptions
-            .map((e, i) => (
-              <option
-                key={ i }
-                value={ e }
-              >
-                {e}
-              </option>))}
-        </select>
-      </label>
-
-      <label
-        htmlFor="sort"
-      >
-        <input
-          type="radio"
-          value="ASC"
-          name="sort"
-          data-testid="column-sort-input-asc"
-          onChange={ ({ target: { value } }) => {
-            setFilterOrder({ ...filterOrder, sort: value });
-          } }
-        />
-        Crescente
-      </label>
-      <label
-        htmlFor="sort"
-      >
-        <input
-          data-testid="column-sort-input-desc"
-          type="radio"
-          value="DESC"
-          name="sort"
-          onChange={ ({ target: { value } }) => {
-            setFilterOrder({ ...filterOrder, sort: value });
-          } }
-        />
-        Decrescente
-      </label>
-
-      <button
-        type="button"
-        /* onClick={ sortFilter } */
-        data-testid="column-sort-button"
-      >
-        Ordenar
       </button>
 
       <tbody>

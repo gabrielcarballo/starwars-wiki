@@ -45,8 +45,6 @@ describe('Main Route tests', () => {
     expect(await screen.findAllByTestId('filter')).toHaveLength(1);
   });
   it('Function as intended as comparison filter is applied', async () => {
-    /* const input = screen.getByRole('textbox');
-    const columnFilter = screen.getByTestId('column-filter'); */
     const comparisonFilter = screen.getByTestId('comparison-filter');
     const valueFilter = screen.getByRole('spinbutton');
     const applyFilterBtn = screen.getByRole('button', {
@@ -55,13 +53,17 @@ describe('Main Route tests', () => {
     userEvent.selectOptions(comparisonFilter, 'menor que');
     userEvent.type(valueFilter, '10000');
     userEvent.click(applyFilterBtn);
-
+    expect(await screen.findAllByTestId('filter')).toHaveLength(1);
+  });
+  it('', async () => {
+    const comparisonFilter = screen.getByTestId('comparison-filter');
+    const valueFilter = screen.getByRole('spinbutton');
+    const applyFilterBtn = screen.getByRole('button', {
+      name: /aplicar/i,
+    });
+    userEvent.selectOptions(comparisonFilter, 'igual a');
+    userEvent.type(valueFilter, '1000');
+    userEvent.click(applyFilterBtn);
     expect(await screen.findAllByTestId('filter')).toHaveLength(1);
   });
 });
-/* const columnSort = screen.getByTestId('column-sort');
-    const ascSort = screen.getByTestId('column-sort-input-asc');
-    const descSort = screen.getByTestId('column-sort-input-desc');
-    const applySortFilterBtn = screen.getByRole('button', {
-      name: /ordenar/i,
-    }); */
