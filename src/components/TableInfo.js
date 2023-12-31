@@ -1,10 +1,6 @@
 import React, { useContext, useState } from 'react';
 import ApiContext from '../context/ApiContext';
 
-// Trocar nome de filtros das linhas 53 a 57
-// limpar os inputs após clicar no botão de filtro
-// Terminar de implementar a lógica do sort, que é chamado pelo data da context e sempre sobrescreve o que foi filtrado
-
 export default function TableInfo() {
   const [textFilter, setTextFilter] = useState('');
   const [columnOptions] = useState([

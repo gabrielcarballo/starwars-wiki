@@ -4,15 +4,15 @@ import ApiContext from './ApiContext';
 import apiFetch from '../helper/ApiFetch';
 
 function ApiProvider({ children }) {
-  const [data, saveAPIinfo] = useState([]);
+  const [apiInfo, setApiInfo] = useState([]);
 
   useEffect(() => {
-    apiFetch().then((e) => saveAPIinfo(e));
+    apiFetch().then((e) => setApiInfo(e));
   }, []);
 
   const memo = useMemo(() => ({
-    data,
-  }), [data]);
+    apiInfo,
+  }), [apiInfo]);
 
   return (
     <ApiContext.Provider value={ memo }>
